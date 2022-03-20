@@ -25,7 +25,7 @@ const bolas = [
 
 function centrarBolaGUI(controlDiv) {
     const etiqueta = document.createElement('label');
-    etiqueta.appendChild(document.createTextNode('Acércame a una bola '));
+    etiqueta.appendChild(document.createTextNode('🔮 '));
     const selector = document.createElement('select');
     selector.setAttribute('id', 'selectCentrarBola');
     for(let i=0; i<bolas.length; i++){
