@@ -57,19 +57,12 @@ function centrarBolaGUI(controlDiv) {
 
 function iniciarBola(){
     const parametros = new URLSearchParams(window.location.search);
-    let bolaParametro = parametros.get('bola'); console.log('Entramos en iniciarBola y sacamos el parámetro ' + bolaParametro);
+    let bolaParametro = parametros.get('bola');
     bolaParametro = parseInt(bolaParametro);
-    console.log('bolaParametro es ' + bolaParametro + ' despues de parseInt');
-    if(isNaN(bolaParametro)){
-        bola = null; console.log('No se le ha pasado una bola sintacticamente valida en la url');
-    }
-    bolaParametro--;
-    console.log('Le restamos uno: ' + bolaParametro);
-    console.log('El array es de tamaño ' + bolas.length);
-    if( bolaParametro >= 0 && bolaParametro < bolas.length && bolas[bolaParametro].show ){
-        bola = bolaParametro; console.log('Finalmente devolvemos ' + bola + ' de iniciarBola');
-    } else {
-        bola = null; console.log('Estamos pasando por la url una bola que se pasa, no llega o tiene show false');
+    if(isNaN(bolaParametro) || bolaParametro < 1 || bolaParametro > bolas.length || bolas[bolaParametro-1].show == false) bola = null;
+    else{
+        bolaParametro--;
+        bola = bolaParametro;
     }
 }
 
@@ -87,40 +80,34 @@ function estiloOrtofoto(){
 }
 
 function listenerCambioTipoMapa(){
-    const tipo = mapa.getMapTypeId(); console.log('El mapa se ha puesto en ' + tipo);
+    const tipo = mapa.getMapTypeId();
     localStorage.setItem('tipo', tipo);
     switch(tipo){
         case google.maps.MapTypeId.SATELLITE:
-            mapa.setOptions({ styles: estiloOrtofoto() }); console.log('Se aplica el estilo ortofoto');
+            mapa.setOptions({ styles: estiloOrtofoto() });
             break;
         case google.maps.MapTypeId.ROADMAP:
-            mapa.setOptions({ styles: estiloMapa() }); console.log('Se aplica el estilo mapa');
+            mapa.setOptions({ styles: estiloMapa() });
             break;
         default:
-            console.log('El mapa tipo ' + tipo + ' no está soportado');
     }
 }
 
 function initMap() {
     bounds = new google.maps.LatLngBounds();
     const opciones = {};
-    const tipoMapa = localStorage.getItem('tipo'); console.log('Sacamos el tipoMapa del localStorage y sale ' + tipoMapa);
-    iniciarBola(); console.log('Hemos salido de iniciarBola');
+    const tipoMapa = localStorage.getItem('tipo');
+    iniciarBola();
     opciones.center = (bola!=null)?bolas[bola].pos:{lat: 0.0, lng: 0.0};
     opciones.zoom = (bola!=null)?6:0;
-    console.log('zoom ' + opciones.zoom);
-    console.log('lat ' + opciones.center.lat);
-    console.log('lng ' + opciones.center.lng);
     switch(tipoMapa){
         case google.maps.MapTypeId.SATELLITE:
         opciones.styles = estiloOrtofoto();
         opciones.mapTypeId = google.maps.MapTypeId.SATELLITE;
-        console.log('Inicializamos el mapa como satelite. Hemos sacado ' + tipoMapa + ' del localstorage');
         break;
         default:
         opciones.styles = estiloMapa();
         opciones.mapTypeId = google.maps.MapTypeId.ROADMAP;
-        console.log('Inicializamos el mapa como carretera. Hemos sacado ' + tipoMapa + ' del localstorage');
     }
     opciones.mapTypeControl = true;
     opciones.mapTypeControlOptions = {
@@ -129,8 +116,7 @@ function initMap() {
                                      };
     mapa = new google.maps.Map(document.getElementById("map"), opciones);
     mapa.addListener("maptypeid_changed", listenerCambioTipoMapa);
-    console.log('Entramos a poner los marcadores');
-    for(let i = 0; i < bolas.length; i++){ console.log('bola ' + i);
+    for(let i = 0; i < bolas.length; i++){
         if(bolas[i].show){
             bounds.extend(bolas[i].pos);
             bolas[i].imagen = {url: "img/bola-" + (i + 1) + ".svg", scaledSize: new google.maps.Size(30, 30)};
@@ -145,21 +131,11 @@ function initMap() {
             bolas[i].marcador.addListener('click', function(){
                 bolas[i].info.open({anchor: bolas[i].marcador, map: mapa, shouldFocus: false});
             });
-            console.log(bolas[i]);
         }
     }
     if(bola == null) mapa.fitBounds(bounds, 30);
-    console.log(bounds);
     const divCentrarBola = document.createElement("div");
     divCentrarBola.setAttribute('id', 'divCentrarBola');
     centrarBolaGUI(divCentrarBola);
     mapa.controls[google.maps.ControlPosition.TOP_CENTER].push(divCentrarBola);
 }
-
-
-
-
-
-
-
-
