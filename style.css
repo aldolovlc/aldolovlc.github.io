@@ -1,7 +1,17 @@
-/* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
 #map {
   height: 100%;
+}
+
+#divCentrarBola {
+  background-color: #fff;
+  border: 2px solid #fff;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 22px;
+  text-align: center;
+  padding: 3px;
 }
 
 /* Optional: Makes the sample page fill the window. */
@@ -11,3 +21,4 @@ body {
   margin: 0;
   padding: 0;
 }
+
