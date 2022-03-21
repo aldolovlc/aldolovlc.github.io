@@ -2,18 +2,36 @@
   height: 100%;
 }
 
-#divCentrarBola {
+#divCentrarBola, #divBulmaDice {
   background-color: #fff;
   border: 2px solid #fff;
   border-radius: 3px;
   box-shadow: 0 2px 6px rgba(0,0,0,.3);
   cursor: pointer;
   margin-top: 8px;
-  margin-bottom: 22px;
+  margin-bottom: 8px;
   text-align: center;
   padding: 3px;
 }
 
+#divBulmaDice {
+  max-width: 80%; 
+}
+#divBulmaDice img {
+  float: left;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+}
+
+#divBulmaDiceTexto {
+ font-size: small;
+}
+/*
+#divBulmaDice button {
+}
+
+#divBulmaDice */ 
 /* Optional: Makes the sample page fill the window. */
 html,
 body {
