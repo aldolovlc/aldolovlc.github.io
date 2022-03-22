@@ -6,28 +6,29 @@ let bounds;
 
 const ordinales = ['Primera', 'Segunda', 'Tercera', 'Cuarta', 'Quinta', 'Sexta', 'Séptima'];
 
-const ayuda = ['Hola David. En este detector de bolas de dragón podrás ver dónde aparecerán el resto de bolas.',
+const ayuda = ['Hola David. En este detector de bolas de dragón podrás ver dónde aparecerán el resto de bolas. ¿A que mola?',
                'Las bolas que aparecen dando saltos están preparadas para ir en su búsqueda.',
                'Las bolas que aparecen fijas, ya están recuperadas. Seguirán en el mismo lugar donde las conseguiste.',
                'Si pulsas en cada bola, aparecerá información y pistas para dar con ella.',
-               '¡Mucha suerte!'];
-               
+               'En la lista desplegable de arriba, el mapa se centrará en la bola que quieras. Si no deja elegirla, ¡el radar aún no la ha encontrado!',
+               'Sé que serás capaz de hacerlo. ¡Mucha suerte!'];
+
 let ayudaPos = 0;
 
 const bolas = [
-              { pos: {lat:40.47593894308782, lng:-0.40152796950835784}, show : true, animate : false,
+              { pos: {lat:40.47593894308782, lng:-0.40152796950835784}, show : false, animate : false,
                 texto : 'Primera.' },
               { pos: {lat:39.47593894308782, lng:-10.40152796950835784}, show : false, animate : true,
                 texto : 'Segunda.' },
-              { pos: {lat:38.47593894308782, lng:-11.40152796950835784}, show : true, animate : false,
+              { pos: {lat:38.47593894308782, lng:-11.40152796950835784}, show : false, animate : false,
                 texto : 'Tercera.' },
-              { pos: {lat:37.47593894308782, lng:-16.40152796950835784}, show : true, animate : true,
+              { pos: {lat:37.47593894308782, lng:-16.40152796950835784}, show : false, animate : true,
                 texto : 'Cuarta.' },
-              { pos: {lat:36.47593894308782, lng:-20.40152796950835784}, show : true, animate : false,
-                texto : 'Para obtener esta bola, hay que ganar tres partidas de piedra, papel o tijera contra Paco.' },
-              { pos: {lat:33.47593894308782, lng:-40.40152796950835784}, show : true, animate : true,
+              { pos: {lat:39.478476039019064, lng:-0.40081630428251475}, show : true, animate : false,
+                texto : '<p>Mañana verás a un chico de poco más de cuarenta años. Con gafas, barba canosa, pelo azul (según los rumores) y las uñas pintadas. Si le retas a un combate de piedra-papel-tijeras podrás ganarle tu primera bola de dragón. Pero no te preocupes, vas a jugar con ventaja, he descifrado pistas en antiguos libros de filosofía oriental.</p><ul><li>Para ganar la primera bola, debes elegir el material con el que están fabricadas las pajitas.</li><li>Para ganar la segunda, debes elegir lo que estaba haciendo ***** en el baño.</li><li>Y para ganar la tercera, debes elegir lo que te gustaría tirarle a ****** en la cabeza para abrírsela.</li></ul>' },
+              { pos: {lat:33.47593894308782, lng:-40.40152796950835784}, show : false, animate : true,
                 texto : 'Sexta.' },
-              { pos: {lat:30.47593894308782, lng:-3.40152796950835784}, show : true, animate : false,
+              { pos: {lat:30.47593894308782, lng:-3.40152796950835784}, show : false, animate : false,
                 texto : 'Septima.' }
               ];
 
@@ -57,7 +58,7 @@ function centrarBolaGUI(controlDiv) {
         if(value == 0) mapa.fitBounds(bounds, 30);
         else {
             mapa.panTo(bolas[value-1].pos);
-            if(mapa.getZoom()<8) mapa.setZoom(8);
+            if(mapa.getZoom()<15) mapa.setZoom(15);
         }
     });
     controlDiv.appendChild(etiqueta);
@@ -159,11 +160,8 @@ function iniciarBola(){
     const parametros = new URLSearchParams(window.location.search);
     let bolaParametro = parametros.get('bola');
     bolaParametro = parseInt(bolaParametro);
-    if(isNaN(bolaParametro) || bolaParametro < 1 || bolaParametro > bolas.length || bolas[bolaParametro-1].show == false) bola = null;
-    else{
-        bolaParametro--;
-        bola = bolaParametro;
-    }
+    if(isNaN(bolaParametro) || bolaParametro < 1 || bolaParametro > bolas.length || bolas[bolaParametro-1].show == false) return null;
+    else { bolaParametro--; return bolaParametro; }
 }
 
 function estiloMapa(){
@@ -197,9 +195,9 @@ function initMap() {
     bounds = new google.maps.LatLngBounds();
     const opciones = {};
     const tipoMapa = localStorage.getItem('tipo');
-    iniciarBola();
+    bola = iniciarBola();
     opciones.center = (bola!=null)?bolas[bola].pos:{lat: 0.0, lng: 0.0};
-    opciones.zoom = (bola!=null)?6:0;
+    opciones.zoom = (bola!=null)?15:0;
     switch(tipoMapa){
         case google.maps.MapTypeId.SATELLITE:
         opciones.styles = estiloOrtofoto();
@@ -241,5 +239,5 @@ function initMap() {
     divBulmaDice.setAttribute('id', 'divBulmaDice');
     bulmaDiceGUI(divBulmaDice);
     mapa.controls[google.maps.ControlPosition.TOP_CENTER].push(divCentrarBola);
-    mapa.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(divBulmaDice);
+    mapa.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(divBulmaDice);
 }

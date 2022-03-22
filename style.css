@@ -15,7 +15,8 @@
 }
 
 #divBulmaDice {
-  max-width: 80%; 
+  margin-left: 8px;
+  max-width: calc(100% - 80px);
 }
 #divBulmaDice img {
   float: left;
@@ -24,8 +25,14 @@
   border-radius: 50%;
 }
 
-#divBulmaDiceTexto {
+#bul1 div {
+  margin-left: 58px;
+}
+
+#textoAyuda {
  font-size: small;
+ margin-left: 58px;
+ margin-right: 8px;
 }
 /*
 #divBulmaDice button {
@@ -39,4 +46,3 @@ body {
   margin: 0;
   padding: 0;
 }
-
